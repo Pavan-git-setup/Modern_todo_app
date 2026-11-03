@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Flow — Node.js To-Do</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Main Card Container -->
+    <main class="todo-card">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div>
+            <h1>Task Flow</h1>
+            <p id="currentDate" class="date-text">Loading date...</p>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <button id="themeToggleBtn" class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
+            <!-- Sun / Moon Icon injected by JS -->
+            <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Progress Section -->
+      <section class="progress-section">
+        <div class="progress-header">
+          <span class="progress-label">Completion Status</span>
+          <span id="progressPercentage" class="progress-val">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progressBarFill" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-badge"><span id="statTotal">0</span> Total</div>
+          <div class="stat-badge"><span id="statActive">0</span> Active</div>
+          <div class="stat-badge"><span id="statCompleted">0</span> Done</div>
+        </div>
+      </section>
+
+      <!-- Task Creation Form -->
+      <form id="createTaskForm" class="create-form">
+        <div class="input-row">
+          <input 
+            type="text" 
+            id="taskTextInput" 
+            placeholder="Add a new task..." 
+            autocomplete="off" 
+            required 
+          />
+          <button type="submit" id="submitTaskBtn" class="primary-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Add Task</span>
+          </button>
+        </div>
+
+        <!-- Optional Priority & Category selectors -->
+        <div class="options-row">
+          <div class="option-group">
+            <label for="prioritySelect">Priority:</label>
+            <select id="prioritySelect">
+              <option value="low">🟢 Low</option>
+              <option value="medium" selected>🟡 Medium</option>
+              <option value="high">🔴 High</option>
+            </select>
+          </div>
+          <div class="option-group">
+            <label for="categorySelect">Category:</label>
+            <select id="categorySelect">
+              <option value="General" selected>General</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+          </div>
+        </div>
+      </form>
+
+      <!-- Search & Filters Toolbar -->
+      <section class="toolbar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search tasks..." autocomplete="off">
+        </div>
+
+        <div class="filter-pills">
+          <button type="button" class="filter-pill active" data-filter="all">All</button>
+          <button type="button" class="filter-pill" data-filter="active">Active</button>
+          <button type="button" class="filter-pill" data-filter="completed">Completed</button>
+        </div>
+      </section>
+
+      <!-- Task List Area -->
+      <ul id="taskContainer" class="task-list">
+        <!-- Injected via JavaScript -->
+      </ul>
+
+      <!-- Empty State -->
+      <div id="emptyContainer" class="empty-state hidden">
+        <div class="empty-icon">✨</div>
+        <p class="empty-title">No tasks found</p>
+        <p class="empty-desc">Create a new task above or adjust your search filters.</p>
+      </div>
+
+      <!-- Card Footer -->
+      <footer class="card-footer">
+        <span id="itemsLeftMsg" class="footer-msg">0 items left</span>
+        <button type="button" id="clearDoneBtn" class="clear-done-btn">Clear completed</button>
+      </footer>
+    </main>
+
+    <!-- Node Server Status Pill -->
+    <div class="server-badge">
+      <span class="pulse-dot"></span>
+      <span>Node.js API Connected</span>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

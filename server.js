@@ -16,7 +16,9 @@ const DATA_FILE = path.join(DATA_DIR, 'todos.json');
 // Middleware
 app.use(cors());
 app.use(express.json());
+// Serve static assets from public folder or project root
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 // Seed initial tasks
 const initialTodos = [
@@ -156,9 +158,33 @@ app.post('/api/todos/clear-completed', async (req, res) => {
   res.json({ message: 'Cleared completed tasks', remaining });
 });
 
-// Fallback route for SPA
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Fallback route for SPA - checks public/index.html first, then root index.html
+app.get('*', async (req, res) => {
+  const publicIndex = path.join(__dirname, 'public', 'index.html');
+  const rootIndex = path.join(__dirname, 'index.html');
+
+  try {
+    await fs.access(publicIndex);
+    return res.sendFile(publicIndex);
+  } catch {
+    try {
+      await fs.access(rootIndex);
+      return res.sendFile(rootIndex);
+    } catch {
+      const files = await fs.readdir(__dirname).catch(() => []);
+      return res.status(404).send(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>App Starting Up</title></head>
+        <body style="font-family: system-ui, sans-serif; padding: 40px; text-align: center; line-height: 1.6;">
+          <h2>Node.js API Server is Live! 🚀</h2>
+          <p>The backend is active, but <code>index.html</code> was not found in <code>public/</code> or root.</p>
+          <p>Files in current directory: <code>${files.join(', ')}</code></p>
+        </body>
+        </html>
+      `);
+    }
+  }
 });
 
 // Start Server
