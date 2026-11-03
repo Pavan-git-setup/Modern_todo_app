@@ -160,6 +160,11 @@ app.post('/api/todos/clear-completed', async (req, res) => {
 
 // Fallback route for SPA - checks public/index.html first, then root index.html
 app.get('*', async (req, res) => {
+  // If the request is for a missing file (e.g. .js, .css, .ico), return 404 rather than HTML
+  if (path.extname(req.path)) {
+    return res.status(404).send('Asset Not Found');
+  }
+
   const publicIndex = path.join(__dirname, 'public', 'index.html');
   const rootIndex = path.join(__dirname, 'index.html');
 
