@@ -1,0 +1,21 @@
+{
+  "name": "modern-todo-node",
+  "version": "1.0.0",
+  "description": "Modern full-stack To-Do application built with Node.js, Express, and a responsive modern UI.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": ["todo", "nodejs", "modern-ui", "express"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
