@@ -1,0 +1,26 @@
+[
+  {
+    "id": "28123c98-33cc-4822-a035-2d17f511179b",
+    "text": "Check email",
+    "completed": false,
+    "priority": "medium",
+    "category": "Urgent",
+    "createdAt": "2026-11-03T02:18:27.995Z"
+  },
+  {
+    "id": "387d0a91-d5c7-4492-bdf1-ebfe2187bc8f",
+    "text": "Evaluation",
+    "completed": false,
+    "priority": "medium",
+    "category": "Work",
+    "createdAt": "2026-11-03T02:18:17.503Z"
+  },
+  {
+    "id": "1",
+    "text": "Welcome to your modernized Node.js To-Do app! 🚀",
+    "completed": false,
+    "priority": "high",
+    "category": "Work",
+    "createdAt": "2026-11-02T23:23:36.304Z"
+  }
+]
